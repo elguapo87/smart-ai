@@ -22,6 +22,8 @@ import chat_icon_dull from "./chat_icon_dull.svg";
 import qrcode from "./qrcode.png";
 import three_dots from "./three_dots.svg";
 import new_icon from "./new_icon.svg";
+import bulb_ai from "./bulb_ai.png";
+import smart_ai from "./smart_ai.png";
 
 export const assets = {
   arrow_icon,
@@ -48,4 +50,6 @@ export const assets = {
   qrcode,
   three_dots,
   new_icon,
+  bulb_ai,
+  smart_ai
 };
