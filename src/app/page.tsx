@@ -4,6 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import Image from "next/image";
 import { useState } from "react";
 import { assets } from "../../assets/assets";
+import PromptBox from "@/components/PromptBox";
 
 export default function HomePage() {
 
@@ -37,7 +38,7 @@ export default function HomePage() {
             (<div></div>)
           }
 
-          {/* PROMPT BOX */}
+          <PromptBox isLoading={isLoading} setIsLoading={setIsLoading} />
           <p className="text-xs absolute bottom-1 text-gray-500">AI generated, for refrence only</p>
         </div>
 
