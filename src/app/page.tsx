@@ -10,6 +10,7 @@ import Message from "@/components/Message";
 export default function HomePage() {
 
   const [expand, setExpand] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +32,7 @@ export default function HomePage() {
             (<>
               <div className="flex items-end">
                 <Image src={assets.bulb_ai} alt="" className="h-16 w-16 aspect-square invert" />
-                <p className="text-2xl font-medium">Hi, I'm Smart AI</p>
+                <p className="text-2xl font-medium">Hi, I&apos;m Smart AI</p>
               </div>
               <p className="text-sm mt-2">How can I help you today?</p>
             </>)
