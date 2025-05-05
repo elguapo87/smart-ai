@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { assets } from "../../assets/assets";
 import PromptBox from "@/components/PromptBox";
+import Message from "@/components/Message";
 
 export default function HomePage() {
 
@@ -35,7 +36,9 @@ export default function HomePage() {
               <p className="text-sm mt-2">How can I help you today?</p>
             </>)
                  :
-            (<div></div>)
+            (<div>
+              <Message role="ai" content="What is meaning of life?" />
+            </div>)
           }
 
           <PromptBox isLoading={isLoading} setIsLoading={setIsLoading} />
