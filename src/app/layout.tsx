@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import AppContextProvider from "@/context/AppContext";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,9 +23,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <AppContextProvider>
-        <html lang="en">
-          <body className={`${inter.className} antialiased`}>
-            {children}
+        <html lang="en" suppressHydrationWarning>
+          <body className={`${inter.className} antialiased transition-colors duration-300`}>
+            <ThemeProvider attribute="class" enableSystem defaultTheme="system">
+              {children}
+            </ThemeProvider>
           </body>
         </html>
       </AppContextProvider>

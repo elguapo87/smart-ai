@@ -24,6 +24,8 @@ import three_dots from "./three_dots.svg";
 import new_icon from "./new_icon.svg";
 import bulb_ai from "./bulb_ai.png";
 import smart_ai from "./smart_ai.png";
+import sun_icon from "./sun_icon.png";
+import moon_icon from "./moon_icon.png";
 
 export const assets = {
   arrow_icon,
@@ -51,5 +53,7 @@ export const assets = {
   three_dots,
   new_icon,
   bulb_ai,
-  smart_ai
+  smart_ai,
+  sun_icon,
+  moon_icon
 };

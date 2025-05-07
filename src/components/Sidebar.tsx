@@ -1,9 +1,12 @@
+"use client"
+
 import Image from "next/image"
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { assets } from "../../assets/assets";
 import { AppContext } from "@/context/AppContext";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import ChatLabel from "./ChatLabel";
+import { useTheme } from "next-themes";
 
 type HomePageType = {
     expand: boolean;
@@ -23,15 +26,26 @@ const Sidebar = ({ expand, setExpand }: HomePageType) => {
     open: false
   });
 
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const isDark = theme === "dark";
+
   return (
-    <div className={`flex flex-col justify-between bg-[#212327] pt-7 transition-all z-50 max-md:absolute max-md:h-screen ${expand ? "p-4 w-64" : "md:w-20 w-0 max-md:overflow-hidden"}`}>
+    <div className={`flex flex-col justify-between bg-[#c5c5c5] dark:bg-[#212327] pt-7 transition-all z-50 max-md:absolute max-md:h-screen ${expand ? "p-4 w-64" : "md:w-20 w-0 max-md:overflow-hidden"}`}>
       <div>
         <div className={`flex ${expand ? "flex-row gap-10" : "flex-col items-center gap-8"}`}>
-            <Image src={expand ? assets.smart_ai : assets.bulb_ai} alt="" className={expand ? "w-36 invert" : "w-10 invert"} />
+            <Image src={expand ? assets.smart_ai : assets.bulb_ai} alt="" className={expand ? "w-36 dark:invert" : "w-10 dark:invert"} />
 
-            <div onClick={() => setExpand(prev => !prev)} className="group relative flex items-center justify-center hover:bg-gray-500/20 transition-all duration-300 h-9 w-9 aspect-square rounded-lg cursor-pointer">
-                <Image src={assets.menu_icon} alt="" className="md:hidden" />
-                <Image src={expand ? assets.sidebar_close_icon : assets.sidebar_icon} alt="" className="hidden md:block w-7" />
+            <div onClick={() => setExpand(prev => !prev)} className="group relative flex items-center justify-center hover:bg-gray-500/40 dark:hover:bg-gray-500/20 transition-all duration-300 h-9 w-9 aspect-square rounded-lg cursor-pointer">
+                <Image src={assets.menu_icon} alt="" className={`md:hidden ${!isDark && "invert"}`} />
+                <Image src={expand ? assets.sidebar_close_icon : assets.sidebar_icon} alt="" className={`hidden md:block w-7 ${!isDark && "invert"}`} />
 
                 <div className={`absolute w-max ${expand ? "left-1/2 -translate-x-1/2 top-12" : "-top-12 left-0"} opacity-0 group-hover:opacity-100 transition bg-black text-white text-sm px-3 py-2 rounded-lg shadow-lg pointer-events-none`}>
                     {expand ? "Close sidebar" : "Open sidebar"}
@@ -40,8 +54,8 @@ const Sidebar = ({ expand, setExpand }: HomePageType) => {
             </div>
         </div>
 
-        <button className={`mt-8 flex items-center justify-center cursor-pointer ${expand ? "bg-primary hover:opacity-90 rounded-2xl gap-2 p-2.5 w-max" : "group relative h-9 w-9 mx-auto hover:bg-gray-500/30 rounded-lg"}`}>
-            <Image src={expand ? assets.chat_icon : assets.chat_icon_dull} alt="" className={expand ? "w-6" : "w-7"} />
+        <button className={`mt-8 flex items-center justify-center cursor-pointer ${expand ? "bg-primary hover:opacity-90 rounded-2xl gap-2 p-2.5 w-max" : "group relative h-9 w-9 mx-auto hover:bg-gray-500/40 dark:hover:bg-gray-500/30 rounded-lg"}`}>
+            <Image src={expand ? assets.chat_icon : assets.chat_icon_dull} alt="" className={`${expand ? "w-6" : "w-7"} ${!expand && !isDark && "invert"}`} />
             <div className="absolute w-max -top-12 -right-12 opacity-0 group-hover:opacity-100 transition bg-black text-white text-sm px-3 py-2 rounded-lg shadow-lg pointer-events-none">
                 New chat
                 <div className="w-3 h-3 absolute bg-black rotate-45 left-4 -bottom-1.5"></div>
@@ -51,7 +65,7 @@ const Sidebar = ({ expand, setExpand }: HomePageType) => {
         </button>
 
         <div className={`mt-8 text-white/25 text-sm ${expand ? "block" : "hidden"}`}>
-            <p className="my-1">Recents</p>
+            <p className="my-1 text-gray-800 dark:text-gray-400">Recents</p>
             
             <ChatLabel openMenu={openMenu} setOpenMenu={setOpenMenu} />
         </div>
@@ -63,9 +77,9 @@ const Sidebar = ({ expand, setExpand }: HomePageType) => {
            ?
           <UserButton />
            :
-          <Image src={assets.profile_icon} alt="" className="w-7" />
+          <Image src={assets.profile_icon} alt="" className={`w-7 ${!isDark && "invert"}`} />
         }
-        {expand && <span>My Profile</span>}
+        {expand && <span className="text-gray-800 dark:text-stone-200">My Profile</span>}
       </div>
     </div>
   )

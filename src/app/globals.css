@@ -1,8 +1,24 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #4d6bfe;
+  --color-darkTheme: #29222d;
+  --color-bgLight: #f6f6f6;
+  --color-lightHover: "#fcf4ff";
+  --color-darkHover: "#2a004a";
 }
+
+body {
+  @apply bg-white text-black;
+}
+
+.dark body {
+  @apply bg-[color:var(--color-darkTheme)] text-white;
+}
+
+
 
 html {
   @apply scroll-smooth;
@@ -11,5 +27,6 @@ html {
 ::-webkit-scrollbar {
   display: none;
 }
+
 
 
