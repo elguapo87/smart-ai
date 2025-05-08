@@ -6,16 +6,17 @@ import { UserResource } from "@clerk/types";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+type MessageType = {
+    _id?: string;
+    role: string;
+    content: string;
+    timestamp: number;
+};
+
 type ChatsType = {
     _id: string;
     name: string;
-    messages: [
-        {
-            role: string;
-            content: string;
-            timestamp: number;
-        }
-    ];
+    messages: MessageType[];
     userId: string;
 };
 
@@ -57,6 +58,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
             toast.error(errMessage || "Something went wrong.");
         }
     };
+
 
     const fetchUsersChats = async () => {
         try {

@@ -5,7 +5,9 @@ import connectDB from "@/config/db";
 import chatModel from "@/models/chatModel";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent";
+// const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent";
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent";
+
 
 export async function POST(req: NextRequest) {
     try {
@@ -55,6 +57,9 @@ export async function POST(req: NextRequest) {
         });
 
         const geminiData = await geminiRes.json();
+
+         // ✅ Debug log Gemini response (REMOVE or comment in prod)
+    // console.log("Gemini API Response:", JSON.stringify(geminiData, null, 2));
 
         // Extract response safely
         const responseText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;

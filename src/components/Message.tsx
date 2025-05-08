@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { assets } from "../../assets/assets";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 type HomePageProps = {
   role: string;
@@ -7,6 +9,18 @@ type HomePageProps = {
 };
 
 const Message = ({ role, content }: HomePageProps) => {
+
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const isDark = theme === "dark";
+
   return (
     <div className="flex flex-col items-center w-full max-w-3xl text-sm">
       <div className={`flex flex-col w-full mb-8 ${role === "user" && "items-end"}`}>
@@ -16,38 +30,38 @@ const Message = ({ role, content }: HomePageProps) => {
               {
                 role === "user"
                   ?
-                (
-                  <>
-                    <Image src={assets.copy_icon} alt="" className="w-4 cursor-pointer" />
-                    <Image src={assets.pencil_icon} alt="" className="w-4.5 cursor-pointer" />
-                  </>
-                )
+                  (
+                    <>
+                      <Image src={assets.copy_icon} alt="" className="w-4 cursor-pointer" />
+                      <Image src={assets.pencil_icon} alt="" className="w-4.5 cursor-pointer" />
+                    </>
+                  )
                   :
-                (
-                  <>
-                    <Image src={assets.copy_icon} alt="" className="w-4.5 cursor-pointer" />
-                    <Image src={assets.regenerate_icon} alt="" className="w-4 cursor-pointer" />
-                    <Image src={assets.like_icon} alt="" className="w-4 cursor-pointer" />
-                    <Image src={assets.dislike_icon} alt="" className="w-4 cursor-pointer" />
-                  </>
-                )
+                  (
+                    <>
+                      <Image src={assets.copy_icon} alt="" className="w-4.5 cursor-pointer" />
+                      <Image src={assets.regenerate_icon} alt="" className="w-4 cursor-pointer" />
+                      <Image src={assets.like_icon} alt="" className="w-4 cursor-pointer" />
+                      <Image src={assets.dislike_icon} alt="" className="w-4 cursor-pointer" />
+                    </>
+                  )
               }
             </div>
           </div>
-              
+
           {
             role === "user"
-                ?
-            (
+              ?
+              (
                 <span className="text-white/90">{content}</span>
-            )
-                :
-            (
-              <>
-                <Image src={assets.bulb_ai} alt="" className="h-9 w-9 aspect-square p-1 border border-black/15 rounded-full invert" />
-                <div className="space-y-4 w-full overflow-scroll">{content}</div>
-              </>
-            )
+              )
+              :
+              (
+                <>
+                  <Image src={assets.bulb_ai} alt="" className={`h-9 w-9 aspect-square p-1 border rounded-full ${isDark ? "border-black/15 invert" : "border-gray-600/50"}`} />
+                  <div className="space-y-4 w-full overflow-scroll">{content}</div>
+                </>
+              )
           }
 
         </div>
