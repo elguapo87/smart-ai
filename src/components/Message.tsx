@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Prism from "prismjs"
 import Markdown from "react-markdown";
+import toast from "react-hot-toast";
 
 type HomePageProps = {
   role: string;
@@ -15,6 +16,11 @@ const Message = ({ role, content }: HomePageProps) => {
   useEffect(() => {
     Prism.highlightAll();
   }, [content]);
+
+  const copyMessage = () => {
+    navigator.clipboard.writeText(content);
+    toast.success("Message copied to clipboard");
+  };
 
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -38,14 +44,14 @@ const Message = ({ role, content }: HomePageProps) => {
                   ?
                   (
                     <>
-                      <Image src={assets.copy_icon} alt="" className="w-4 cursor-pointer" />
+                      <Image onClick={copyMessage} src={assets.copy_icon} alt="" className="w-4 cursor-pointer" />
                       <Image src={assets.pencil_icon} alt="" className="w-4.5 cursor-pointer" />
                     </>
                   )
                   :
                   (
                     <>
-                      <Image src={assets.copy_icon} alt="" className="w-4.5 cursor-pointer" />
+                      <Image onClick={copyMessage} src={assets.copy_icon} alt="" className="w-4.5 cursor-pointer" />
                       <Image src={assets.regenerate_icon} alt="" className="w-4 cursor-pointer" />
                       <Image src={assets.like_icon} alt="" className="w-4 cursor-pointer" />
                       <Image src={assets.dislike_icon} alt="" className="w-4 cursor-pointer" />
