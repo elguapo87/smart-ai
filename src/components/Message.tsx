@@ -2,6 +2,8 @@ import Image from "next/image";
 import { assets } from "../../assets/assets";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import Prism from "prismjs"
+import Markdown from "react-markdown";
 
 type HomePageProps = {
   role: string;
@@ -9,6 +11,10 @@ type HomePageProps = {
 };
 
 const Message = ({ role, content }: HomePageProps) => {
+
+  useEffect(() => {
+    Prism.highlightAll();
+  }, [content]);
 
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -59,7 +65,11 @@ const Message = ({ role, content }: HomePageProps) => {
               (
                 <>
                   <Image src={assets.bulb_ai} alt="" className={`h-9 w-9 aspect-square p-1 border rounded-full ${isDark ? "border-black/15 invert" : "border-gray-600/50"}`} />
-                  <div className="space-y-4 w-full overflow-scroll">{content}</div>
+                  <div className="space-y-4 w-full overflow-scroll">
+                    <Markdown>
+                      {content}
+                    </Markdown>
+                  </div>
                 </>
               )
           }
