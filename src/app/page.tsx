@@ -87,8 +87,8 @@ export default function HomePage() {
                 {selectedChat?.name}
               </p>
 
-              {messages.map((msg) => (
-                <Message key={msg._id} role={msg.role} content={msg.content} />
+              {messages.map((msg, index) => (
+                <Message key={`${msg._id}-${index}`} role={msg.role} content={msg.content} />
               ))}
 
               {isLoading && (
