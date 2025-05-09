@@ -21,7 +21,7 @@ export default function HomePage() {
 
   const context = useContext(AppContext);
   if (!context) throw new Error("HomePage must be within AppContextProvider");
-  const { selectedChat } = context;
+  const { selectedChat, createNewChat } = context;
 
   const [expand, setExpand] = useState(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -66,7 +66,7 @@ export default function HomePage() {
           <div className="absolute px-4 top-6 flex items-center justify-between w-full cursor-pointer">
             <Image onClick={() => setExpand(prev => !prev)} src={assets.menu_icon} alt="" className={`md:hidden rotate-180 ${!isDark && "invert"}`} />
             <div className="flex items-center gap-3">
-              <Image src={assets.chat_icon} alt="" className={`md:hidden opacity-70 ${!isDark && "invert"}`} />
+              <Image onClick={createNewChat} src={assets.chat_icon} alt="" className={`md:hidden opacity-70 ${!isDark && "invert"}`} />
               <ThemeToggle />
             </div>
           </div>
