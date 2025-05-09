@@ -11,7 +11,7 @@ import { useTheme } from "next-themes";
 import { AppContext } from "@/context/AppContext";
 
 type MessageType = {
-  _id?: string;
+  _id?: number;
   role: string;
   content: string;
   timestamp: number;
