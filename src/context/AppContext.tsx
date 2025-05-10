@@ -11,13 +11,16 @@ type MessageType = {
     role: string;
     content: string;
     timestamp: number;
+    likes?: string[];
 };
 
 type ChatsType = {
-    _id: number;
+    _id?: number;
     name: string;
     messages: MessageType[];
     userId: string;
+    likes: string[];       
+    dislikes: string[];
 };
 
 interface AppContextType {
@@ -70,7 +73,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (data.success) {
                 setChats(data.data);
-
+              
                 if (data.data.length === 0) {
                     await createNewChat();
                     return fetchUsersChats();

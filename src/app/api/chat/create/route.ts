@@ -12,7 +12,9 @@ export async function POST(req: NextRequest) {
         const chatData = {
             userId,
             messages: [],
-            name: "New Chat"
+            name: "New Chat",
+            likes: [],
+            dislikes: []
         };
 
         // Connect to the database and create a new chat

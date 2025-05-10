@@ -26,6 +26,7 @@ import bulb_ai from "./bulb_ai.png";
 import smart_ai from "./smart_ai.png";
 import sun_icon from "./sun_icon.png";
 import moon_icon from "./moon_icon.png";
+import like_reverse from "./like_reverse.svg";
 
 export const assets = {
   arrow_icon,
@@ -55,5 +56,6 @@ export const assets = {
   bulb_ai,
   smart_ai,
   sun_icon,
-  moon_icon
+  moon_icon,
+  like_reverse,
 };

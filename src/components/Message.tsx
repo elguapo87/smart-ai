@@ -1,17 +1,50 @@
 import Image from "next/image";
 import { assets } from "../../assets/assets";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Prism from "prismjs"
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
+import { AppContext } from "@/context/AppContext";
+import axios from "axios";
 
 type HomePageProps = {
   role: string;
   content: string;
+  messageId?: string | number;
 };
 
-const Message = ({ role, content }: HomePageProps) => {
+const Message = ({ role, content, messageId }: HomePageProps) => {
+
+  const context = useContext(AppContext);
+  if (!context) throw new Error("Message must be within AppContextProvider");
+  const { selectedChat, user, fetchUsersChats } = context;
+
+  const likeHandler = async () => {
+    try {
+      const { data } = await axios.post("/api/chat/like", { chatId: selectedChat?._id, messageId: messageId });
+      if (data.success) {
+        toast.success(data.message);
+        await fetchUsersChats();
+
+      } else {
+        toast.error(data.message);
+      }
+
+    } catch (error) {
+      const errMessage = error instanceof Error ? error.message : "An unknown error occured";
+      toast.error(errMessage);      
+    }
+  };
+
+  console.log(selectedChat);
+  
+
+  const userId = user?.id;
+
+  const message = selectedChat?.messages.find((msg) => msg._id === messageId);
+  
+  const isLikedByUser = message && userId ? (message.likes ?? []).includes(userId) : false;
 
   useEffect(() => {
     Prism.highlightAll();
@@ -51,7 +84,7 @@ const Message = ({ role, content }: HomePageProps) => {
                   (
                     <>
                       <Image onClick={copyMessage} src={assets.copy_icon} alt="" className={`w-4.5 cursor-pointer ${!isDark && "invert"}`} />
-                      <Image src={assets.like_icon} alt="" className={`w-4 cursor-pointer ${!isDark && "invert"}`} />
+                      <button disabled={isLikedByUser}><Image onClick={likeHandler} src={isLikedByUser ? assets.like_reverse : assets.like_icon} alt="" className={`w-4 cursor-pointer ${!isDark && "invert"}`} /></button>
                       <Image src={assets.dislike_icon} alt="" className={`w-4 cursor-pointer ${!isDark && "invert"}`} />
                     </>
                   )

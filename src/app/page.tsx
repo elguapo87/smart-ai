@@ -88,7 +88,7 @@ export default function HomePage() {
               </p>
 
               {messages.map((msg, index) => (
-                <Message key={`${msg._id}-${index}`} role={msg.role} content={msg.content} />
+                <Message key={`${msg._id}-${index}`} role={msg.role} content={msg.content} messageId={msg._id} />
               ))}
 
               {isLoading && (
