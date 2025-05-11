@@ -37,6 +37,23 @@ const Message = ({ role, content, messageId }: HomePageProps) => {
     }
   };
 
+  const dislikeHandler = async () => {
+    try {
+      const { data } = await axios.post("/api/chat/dislike", { chatId: selectedChat?._id, messageId: messageId });
+      if (data.success) {
+        toast.success(data.message);
+        await fetchUsersChats();
+
+      } else {
+        toast.error(data.message);
+      }
+
+    } catch (error) {
+      const errMessage = error instanceof Error ? error.message : "An unknown error occured";
+      toast.error(errMessage);
+    }
+  };
+
   console.log(selectedChat);
   
 
@@ -45,6 +62,8 @@ const Message = ({ role, content, messageId }: HomePageProps) => {
   const message = selectedChat?.messages.find((msg) => msg._id === messageId);
   
   const isLikedByUser = message && userId ? (message.likes ?? []).includes(userId) : false;
+
+  const isDislikedByUser = message && userId ? (message.dislikes ?? []).includes(userId) : false;
 
   useEffect(() => {
     Prism.highlightAll();
@@ -84,8 +103,8 @@ const Message = ({ role, content, messageId }: HomePageProps) => {
                   (
                     <>
                       <Image onClick={copyMessage} src={assets.copy_icon} alt="" className={`w-4.5 cursor-pointer ${!isDark && "invert"}`} />
-                      <button disabled={isLikedByUser}><Image onClick={likeHandler} src={isLikedByUser ? assets.like_reverse : assets.like_icon} alt="" className={`w-4 cursor-pointer ${!isDark && "invert"}`} /></button>
-                      <Image src={assets.dislike_icon} alt="" className={`w-4 cursor-pointer ${!isDark && "invert"}`} />
+                      <button onClick={likeHandler} disabled={isLikedByUser}><Image src={isLikedByUser ? assets.like_reverse : assets.like_icon} alt="" className={`w-4 cursor-pointer ${!isDark && "invert"} ${isLikedByUser && "scale-150"}`} /></button>
+                      <button onClick={dislikeHandler} disabled={isDislikedByUser}><Image src={isDislikedByUser ? assets.dislike_reverse : assets.dislike_icon} alt="" className={`w-4 cursor-pointer ${!isDark && "invert"} ${isDislikedByUser && "scale-150"}`} /></button>
                     </>
                   )
               }

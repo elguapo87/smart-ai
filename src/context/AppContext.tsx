@@ -12,6 +12,7 @@ type MessageType = {
     content: string;
     timestamp: number;
     likes?: string[];
+    dislikes?: string[];
 };
 
 type ChatsType = {
