@@ -110,7 +110,7 @@ export default function HomePage() {
           }
 
           <PromptBox isLoading={isLoading} setIsLoading={setIsLoading} />
-          <p className="text-xs absolute bottom-1 text-gray-500">AI generated, for refrence only</p>
+          <p className="text-xs absolute bottom-1 text-gray-500">Smart AI can make mistakes, use it as reference only</p>
         </div>
 
       </div>
