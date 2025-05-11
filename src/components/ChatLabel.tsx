@@ -9,14 +9,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 type SidebarProps = {
-    id: number;
+    id: string;
     name: string;
     openMenu: {
-        id: number;
+        id: string;
         open: boolean;
     };
     setOpenMenu: Dispatch<SetStateAction<{
-        id: number;
+        id: string;
         open: boolean;
     }>>;
 };
@@ -40,7 +40,7 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }: SidebarProps) => {
             const { data } = await axios.post("/api/chat/rename", { chatId: id, name: newName });
             if (data.success) {
                 await fetchUsersChats();
-                setOpenMenu({ id: 0, open: false });
+                setOpenMenu({ id: "", open: false });
                 toast.success(data.message);
 
             } else {
@@ -61,7 +61,7 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }: SidebarProps) => {
             const { data } = await axios.post("/api/chat/delete", { chatId: id });
             if (data.success) {
                 await fetchUsersChats();
-                setOpenMenu({ id: 0, open: false });
+                setOpenMenu({ id: "", open: false });
                 toast.success(data.message);
 
             } else {

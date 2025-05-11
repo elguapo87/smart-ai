@@ -7,7 +7,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 type MessageType = {
-    _id?: number;
+    _id?: string;
     role: string;
     content: string;
     timestamp: number;
@@ -16,7 +16,7 @@ type MessageType = {
 };
 
 type ChatsType = {
-    _id?: number;
+    _id?: string;
     name: string;
     messages: MessageType[];
     userId: string;

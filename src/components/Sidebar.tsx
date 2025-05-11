@@ -21,10 +21,13 @@ const Sidebar = ({ expand, setExpand }: HomePageType) => {
 
   const { openSignIn } = useClerk();
 
-  const [openMenu, setOpenMenu] = useState({
-    id: 0,
-    open: false
-  });
+  const [openMenu, setOpenMenu] = useState<{
+  id: string;
+  open: boolean;
+}>({
+  id: "",
+  open: false
+});
 
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -68,7 +71,7 @@ const Sidebar = ({ expand, setExpand }: HomePageType) => {
             <p className="my-1 text-gray-800 dark:text-gray-400">Recents</p>
             
             {chats.map((chat) => (
-              <ChatLabel key={chat._id} openMenu={openMenu} setOpenMenu={setOpenMenu} name={chat.name} id={chat._id} />
+              chat._id && (<ChatLabel key={chat._id} openMenu={openMenu} setOpenMenu={setOpenMenu} name={chat.name} id={chat._id} />)
             ))}
         </div>
       </div>

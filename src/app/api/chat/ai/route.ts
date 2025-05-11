@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
         const geminiData = await geminiRes.json();
 
          // ✅ Debug log Gemini response (REMOVE or comment in prod)
-    // console.log("Gemini API Response:", JSON.stringify(geminiData, null, 2));
+        // console.log("Gemini API Response:", JSON.stringify(geminiData, null, 2));
 
         // Extract response safely
         const responseText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -76,6 +76,8 @@ export async function POST(req: NextRequest) {
             role: "model",
             content: responseText,
             timestamp: Date.now(),
+            likes: [],
+            dislikes: [],
         };
 
         data.messages.push(geminiMessage);
@@ -89,7 +91,9 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        return NextResponse.json({ success: true, data: geminiMessage });
+        const savedMessage = data.messages[data.messages.length - 1];
+
+        return NextResponse.json({ success: true, data: savedMessage });
 
     } catch (error) {
         const errMessage = error instanceof Error ? error.message : "An unknown error occurred";

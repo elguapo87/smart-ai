@@ -11,7 +11,7 @@ import { useTheme } from "next-themes";
 import { AppContext } from "@/context/AppContext";
 
 type MessageType = {
-  _id?: number;
+  _id?: string;
   role: string;
   content: string;
   timestamp: number;
@@ -87,8 +87,12 @@ export default function HomePage() {
                 {selectedChat?.name}
               </p>
 
+              {/* {messages.map((msg) => (
+                <Message key={msg?._id} role={msg.role} content={msg.content} messageId={msg._id} />
+              ))} */}
+
               {messages.map((msg, index) => (
-                <Message key={`${msg._id}-${index}`} role={msg.role} content={msg.content} messageId={msg._id} />
+                <Message key={msg._id ?? index} message={msg} />
               ))}
 
               {isLoading && (
