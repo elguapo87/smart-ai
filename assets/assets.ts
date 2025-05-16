@@ -28,6 +28,7 @@ import sun_icon from "./sun_icon.png";
 import moon_icon from "./moon_icon.png";
 import like_reverse from "./like_reverse.svg";
 import dislike_reverse from "./dislike_reverse.svg";
+import heart_icon from "./heart.png";
 
 export const assets = {
   arrow_icon,
@@ -59,5 +60,6 @@ export const assets = {
   sun_icon,
   moon_icon,
   like_reverse,
-  dislike_reverse
+  dislike_reverse,
+  heart_icon
 };

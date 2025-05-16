@@ -25,7 +25,7 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }: SidebarProps) => {
 
     const context = useContext(AppContext);
     if (!context) throw new Error("ChatLabel must be within AppContextProvider");
-    const { fetchUsersChats, chats, setSelectedChat } = context;
+    const { fetchUsersChats, chats, setSelectedChat, token } = context;
 
     const selectChat = () => {
         const chatData = chats.find((chat) => chat._id === id);
@@ -37,7 +37,9 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }: SidebarProps) => {
             const newName = prompt("Enter new name");
             if (!newName) return;
 
-            const { data } = await axios.post("/api/chat/rename", { chatId: id, name: newName });
+            const { data } = await axios.post("/api/chat/rename", { chatId: id, name: newName }, {
+                headers: { token }
+            });
             if (data.success) {
                 await fetchUsersChats();
                 setOpenMenu({ id: "", open: false });
@@ -58,7 +60,9 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }: SidebarProps) => {
             const confirm = window.confirm("Are you sure you want to delete this chat?");
             if (!confirm) return;
 
-            const { data } = await axios.post("/api/chat/delete", { chatId: id });
+            const { data } = await axios.post("/api/chat/delete", { chatId: id }, {
+                headers: { token }
+            });
             if (data.success) {
                 await fetchUsersChats();
                 setOpenMenu({ id: "", open: false });
@@ -85,7 +89,7 @@ const ChatLabel = ({ openMenu, setOpenMenu, id, name }: SidebarProps) => {
 
     const isDark = theme === "dark";
 
-    return (
+    return token && (
         <div onClick={selectChat} className="flex items-center justify-between p-2 text-gray-800 dark:text-white/80 hover:bg-gray-500/30 dark:hover:bg-white/10 rounded-lg text-sm group cursor-pointer">
             <p className="group-hover:max-w-5/6 truncate">{name}</p>
 

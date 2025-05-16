@@ -24,10 +24,9 @@ const Message = ({ message }: MessageProps) => {
 
   const context = useContext(AppContext);
   if (!context) throw new Error("Message must be within AppContextProvider");
+  const { selectedChat, userData, fetchUsersChats, token } = context;
 
-  const { selectedChat, user, fetchUsersChats } = context;
-
-  const userId = user?.id;
+  const userId = userData?._id;
 
   const isLikedByUser = userId ? likes.includes(userId) : false;
   const isDislikedByUser = userId ? dislikes.includes(userId) : false;
@@ -36,7 +35,9 @@ const Message = ({ message }: MessageProps) => {
     try {
       const { data } = await axios.post("/api/chat/like", {
         chatId: selectedChat?._id,
-        messageId,
+        messageId
+      }, {
+        headers: { token }
       });
 
       if (data.success) {
@@ -56,7 +57,9 @@ const Message = ({ message }: MessageProps) => {
     try {
       const { data } = await axios.post("/api/chat/dislike", {
         chatId: selectedChat?._id,
-        messageId,
+        messageId
+      }, {
+        headers: { token }
       });
 
       if (data.success) {
@@ -77,6 +80,9 @@ const Message = ({ message }: MessageProps) => {
     toast.success("Message copied to clipboard");
   };
 
+  console.log(userData);
+  
+
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -92,8 +98,8 @@ const Message = ({ message }: MessageProps) => {
 
   const isDark = theme === "dark";
 
-  return (
-    <div className="flex flex-col items-center w-full max-w-3xl text-sm">
+  return token && (
+    <div className="max-sm:mt-16 flex flex-col items-center w-full max-w-3xl text-sm">
       <div
         className={`flex flex-col w-full mb-8 ${
           role === "user" && "items-end"

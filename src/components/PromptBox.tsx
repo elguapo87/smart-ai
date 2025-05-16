@@ -16,7 +16,7 @@ const PromptBox = ({ isLoading, setIsLoading }: HomePageProps) => {
 
     const context = useContext(AppContext);
     if (!context) throw new Error("Prompt box must be within AppContextProvider");
-    const { user, setChats, selectedChat, setSelectedChat } = context;
+    const { token, setChats, selectedChat, setSelectedChat } = context;
 
     const [prompt, setPrompt] = useState("");
 
@@ -27,13 +27,13 @@ const PromptBox = ({ isLoading, setIsLoading }: HomePageProps) => {
         }
     };
 
-    const sendPrompt = async (e: { preventDefault: () => void }) => {
+    const sendPrompt = async (e: React.FormEvent) => {
         const promptCopy = prompt;
 
         try {
             e.preventDefault();
 
-            if (!user) return toast.error("Login to send message");
+            if (!token) return toast.error("Login to send message");
             if (isLoading) return toast.error("Wait for the previous prompt response");
 
             setIsLoading(true);
@@ -63,9 +63,8 @@ const PromptBox = ({ isLoading, setIsLoading }: HomePageProps) => {
                 };
             });
 
-            const { data } = await axios.post("/api/chat/ai", {
-                chatId: selectedChat._id,
-                prompt,
+            const { data } = await axios.post("/api/chat/ai", { chatId: selectedChat._id, prompt }, {
+                headers: { token }
             });
 
             if (data.success) {

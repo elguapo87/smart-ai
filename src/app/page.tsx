@@ -9,6 +9,7 @@ import Message from "@/components/Message";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "next-themes";
 import { AppContext } from "@/context/AppContext";
+import LoginPage from "@/components/Login";
 
 type MessageType = {
   _id?: string;
@@ -21,7 +22,7 @@ export default function HomePage() {
 
   const context = useContext(AppContext);
   if (!context) throw new Error("HomePage must be within AppContextProvider");
-  const { selectedChat, createNewChat } = context;
+  const { selectedChat, createNewChat, userLogin, token, setToken, setUserData, setUserLogin } = context;
 
   const [expand, setExpand] = useState(false);
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -44,9 +45,14 @@ export default function HomePage() {
     }
   }, [messages]);
 
-
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUserData(null);
+  }
 
   useEffect(() => {
     setMounted(true);
@@ -63,11 +69,25 @@ export default function HomePage() {
         <Sidebar expand={expand} setExpand={setExpand} />
 
         <div className="flex-1 flex flex-col items-center justify-center px-4 pb-8 dark:text-white relative">
-          <div className="absolute px-4 top-6 flex items-center justify-between w-full cursor-pointer">
+          <div className="absolute px-4 top-4 flex items-center justify-between sm:justify-end w-full cursor-pointer">
             <Image onClick={() => setExpand(prev => !prev)} src={assets.menu_icon} alt="" className={`md:hidden rotate-180 ${!isDark && "invert"}`} />
+
             <div className="flex items-center gap-3">
               <Image onClick={createNewChat} src={assets.chat_icon} alt="" className={`md:hidden opacity-70 ${!isDark && "invert"}`} />
-              <ThemeToggle />
+
+              <div className="flex items-center gap-3">
+                {
+                  token
+                  ? 
+                  <div className="relative group">
+                    <Image src={assets.profile_icon} alt="Profile Icon" className="w-7 h-7 rounded-full" />
+                    <button onClick={logoutHandler} className={`border-none absolute top-[28px] right-0 hidden text-sm font-semibold px-1.5 py-0.5 group-hover:block ${isDark ? "bg-stone-200 text-gray-800" : "bg-gray-800 text-stone-200"} rounded transition-all duration-300 cursor-pointer`}>Logout</button>
+                  </div>
+                  :  
+                  <button onClick={() => setUserLogin(true)} className={`border-none text-sm px-2.5 py-1 rounded bg-primary text-white hover:bg-purple-800 transition-all duration-300 cursor-pointer`}>Login</button>
+                }
+                <ThemeToggle />
+              </div>
             </div>
           </div>
 
@@ -83,13 +103,9 @@ export default function HomePage() {
             </>)
                  :
             (<div ref={containerRef} className="relative flex flex-col items-center justify-start w-full mt-20 max-h-screen overflow-y-auto">
-              <p className="fixed top-8 border border-transparent hover:border-gray-500/50 px-2 py-1 rounded-lg font-semibold mb-6">
-                {selectedChat?.name}
+              <p className="fixed top-16 sm:top-8 border border-transparent hover:border-gray-500/50 px-2 py-1 rounded-lg font-semibold mb-6">
+                {token && selectedChat?.name}
               </p>
-
-              {/* {messages.map((msg) => (
-                <Message key={msg?._id} role={msg.role} content={msg.content} messageId={msg._id} />
-              ))} */}
 
               {messages.map((msg, index) => (
                 <Message key={msg._id ?? index} message={msg} />
@@ -110,10 +126,12 @@ export default function HomePage() {
           }
 
           <PromptBox isLoading={isLoading} setIsLoading={setIsLoading} />
-          <p className="text-xs absolute bottom-1 text-gray-500">Smart AI can make mistakes, use it as reference only</p>
+          <p className="max-sm:mt-10 inline-flex text-xs absolute bottom-1 text-gray-500"><span className="hidden lg:inline-flex mr-1">Made by @pgdev with <Image src={assets.heart_icon} alt="" className="h-4 w-4 mx-1" /> |</span> Smart AI can make mistakes, use it as reference only</p>
         </div>
 
       </div>
+
+      {userLogin && <LoginPage />}
     </div>
   );
 }

@@ -1,8 +1,5 @@
 "use client";
-
-import { useAuth, useUser } from "@clerk/nextjs";
 import { createContext, Dispatch, SetStateAction, useEffect, useState } from "react";
-import { UserResource } from "@clerk/types";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -20,39 +17,64 @@ type ChatsType = {
     name: string;
     messages: MessageType[];
     userId: string;
-    likes: string[];       
+    likes: string[];
     dislikes: string[];
 };
 
+type UserType = {
+    _id: string;
+    name: string;
+    email: string;
+};
+
 interface AppContextType {
-    user: UserResource | null | undefined;
     chats: ChatsType[];
     setChats: Dispatch<SetStateAction<ChatsType[]>>;
     selectedChat: ChatsType | null;
     setSelectedChat: Dispatch<SetStateAction<ChatsType | null>>;
     createNewChat: () => Promise<void>;
     fetchUsersChats: () => Promise<void>;
-
+    userLogin: boolean,
+    setUserLogin: Dispatch<SetStateAction<boolean>>;
+    token: string | null;
+    setToken: Dispatch<SetStateAction<string | null>>;
+    userData: UserType | null;
+    setUserData: Dispatch<SetStateAction<UserType | null>>;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
-    const { user } = useUser();
-    const { getToken } = useAuth();
-
     const [chats, setChats] = useState<ChatsType[]>([]);
     const [selectedChat, setSelectedChat] = useState<ChatsType | null>(null);
+    const [userLogin, setUserLogin] = useState<boolean>(false);
+    const [token, setToken] = useState<string | null>(null);
+    const [userData, setUserData] = useState<UserType | null>(null);
+
+    const fetchUserData = async () => {
+        try {
+            const { data } = await axios.get("/api/userAuth/me", {
+                headers: { token }
+            });
+
+            if (data.success) {
+                setUserData(data.user);
+            } else {
+                toast.error(data.message || "Failed to load user data");
+            }
+        } catch (error) {
+            const errMessage = error instanceof Error ? error.message : "An unknown error occurred";
+            toast.error(errMessage || "Something went wrong.");
+        }
+    };
 
     const createNewChat = async () => {
         try {
-            if (!user) return;
-
-            const token = await getToken();
+            if (!token) return;
 
             await axios.post("/api/chat/create", {}, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { token }
             });
 
             await fetchUsersChats();
@@ -66,15 +88,13 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchUsersChats = async () => {
         try {
-            const token = await getToken();
-
             const { data } = await axios.get("/api/chat/get", {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { token }
             });
 
             if (data.success) {
                 setChats(data.data);
-              
+
                 if (data.data.length === 0) {
                     await createNewChat();
                     return fetchUsersChats();
@@ -102,19 +122,28 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        if (storedToken) {
+            setToken(storedToken);
+        }
+    }, []);
 
     useEffect(() => {
-        if (user) {
+        if (token) {
+            fetchUserData();
             fetchUsersChats();
         }
-    }, [user]);
+    }, [token]);
 
     const value = {
-        user,
         chats, setChats,
         selectedChat, setSelectedChat,
         createNewChat,
-        fetchUsersChats
+        fetchUsersChats,
+        userLogin, setUserLogin,
+        token, setToken,
+        userData, setUserData
     };
 
     return (

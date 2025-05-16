@@ -19,7 +19,7 @@ const ThemeToggle = () => {
     const isDark = theme === "dark"
 
     return (
-        <Image onClick={() => setTheme(isDark ? "light" : "dark")} src={isDark ? assets.sun_icon : assets.moon_icon} alt="" className={`w-6 h-6 md:absolute md:right-6 ${!isDark ? "invert" : ""}`} />
+        <Image onClick={() => setTheme(isDark ? "light" : "dark")} src={isDark ? assets.sun_icon : assets.moon_icon} alt="" className={`w-6 h-6 ${!isDark ? "invert" : ""}`} />
     )
 }
 

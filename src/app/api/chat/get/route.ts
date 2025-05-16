@@ -1,11 +1,11 @@
 import connectDB from "@/config/db";
+import protectUser from "@/middlewares/protectUser";
 import chatModel from "@/models/chatModel";
-import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const { userId } = getAuth(req);
+        const userId = await protectUser(req);
         if (!userId) return NextResponse.json({ success: false, message: "User not authenticated" });
 
         // Connect to database and fetch all chats for the user

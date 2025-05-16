@@ -1,8 +1,8 @@
 export const maxDuration = 60;
 import { NextRequest, NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
 import connectDB from "@/config/db";
 import chatModel from "@/models/chatModel";
+import protectUser from "@/middlewares/protectUser";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 // const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent";
@@ -11,10 +11,15 @@ const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/
 
 export async function POST(req: NextRequest) {
     try {
-        const { userId } = getAuth(req);
+        const userId = await protectUser(req);
+    
         const { chatId, prompt } = await req.json();
 
-        if (!userId) return NextResponse.json({ success: false, message: "User not authorized" });
+        if (!userId) {
+            console.warn("Auth failed in /api/chat/ai");
+            return NextResponse.json({ success: false, message: "User not authorized from protectUser" });
+        }
+        
         if (!GEMINI_API_KEY) return NextResponse.json({ success: false, message: "Missing Gemini API Key" });
 
         await connectDB();
@@ -100,9 +105,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: errMessage });
     }
 };
-
-
-
 
 
 
