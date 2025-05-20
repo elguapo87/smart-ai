@@ -6,10 +6,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     await connectDB();
-    const formData = await req.formData();
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    // const formData = await req.formData();
+    // const name = formData.get("name") as string;
+    // const email = formData.get("email") as string;
+    // const password = formData.get("password") as string;
+    const { name, email, password } = await req.json();
 
     if (!name || !email || !password) return NextResponse.json({ success: false, message: "Missing Details" });
         

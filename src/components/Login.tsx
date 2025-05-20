@@ -38,7 +38,17 @@ const LoginPage = () => {
                 }
 
             } else {
-                
+                const { data } = await axios.post("/api/userAuth/register", { name, email, password });
+                if (data.success) {
+                    toast.success(data.message);
+                    setToken(data.token);
+                    localStorage.setItem("token", data.token);
+                    setUserData(data.user);
+                    setUserLogin(false);
+
+                } else {
+                    toast.error(data.message);
+                }
             }
 
         } catch (error) {
